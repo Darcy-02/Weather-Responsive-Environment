@@ -7,7 +7,7 @@ public class ApiKeyManager : MonoBehaviour
     {
         EnvLoader.Load();
 
-        string apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+        string apiKey = Environment.GetEnvironmentVariable("OPENWEATHER_API_KEY");
 
         if (!string.IsNullOrEmpty(apiKey))
         {
