@@ -9,6 +9,10 @@ public class WeatherAPIService : MonoBehaviour, IWeatherService
     private IWeatherUrlBuilder _urlBuilder;
     private IWeatherResponseParser _responseParser;
 
+    private const string BACKEND_URL = "http://127.0.0.1:5000/weather";
+
+
+
     private void Awake()
     {
         EnsureDefaults();
@@ -32,25 +36,22 @@ public class WeatherAPIService : MonoBehaviour, IWeatherService
         Action<WeatherData> onSuccess,
         Action<string> onFailure)
     {
-        EnsureDefaults();
-
-        if (!AreCoordinatesValid(latitude, longitude))
+        if (latitude < -90f || latitude > 90f ||
+            longitude < -180f || longitude > 180f ||
+            float.IsNaN(latitude) || float.IsNaN(longitude))
         {
-            onFailure?.Invoke($"Invalid coordinates (lat: {latitude}, lon: {longitude}). " +
-                              "Latitude must be -90 to 90 and longitude must be -180 to 180.");
+            onFailure?.Invoke("Invalid coordinates.");
             return;
         }
 
-        string apiKey = _apiKeyProvider.GetApiKey();
-        if (string.IsNullOrWhiteSpace(apiKey))
-        {
-            onFailure?.Invoke("OpenWeatherMap API key is missing. Check your .env file.");
-            return;
-        }
+        string url = $"{BACKEND_URL}?lat={latitude}&lon={longitude}";
 
-        string url = _urlBuilder.BuildByCoordinates(latitude, longitude, apiKey);
-
-        StartCoroutine(_requestSender.Get(url, response => HandleResponse(response, onSuccess, onFailure)));
+        StartCoroutine(
+            _requestSender.Get(
+                url,
+                response => HandleResponse(response, onSuccess, onFailure)
+            )
+        );
     }
 
     private void HandleResponse(WebResponse response, Action<WeatherData> onSuccess, Action<string> onFailure)
