@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class WeatherControllerBehaviour : MonoBehaviour
 {
-    [Header("Skybox materials. Clear Day is the default (the first one).")]
-    [Tooltip("The default sky. Any empty slot below falls back to this one.")]
+    [Header("Skybox materials")]
+
 
     [SerializeField] private AudioSource rainAudio;
     [SerializeField] private Material clearDaySky;
@@ -13,12 +13,12 @@ public class WeatherControllerBehaviour : MonoBehaviour
     [SerializeField] private Material cloudyDaySky;
     [SerializeField] private Material cloudyNightSky;
 
-    [Header("Light (optional). Day keeps the intensity you set in the scene; night dims it.")]
+    [Header("Light ")]
     [SerializeField] private Light sun;
-    [Tooltip("Multiplies the light's intensity at night. 1 = no change, 0 = completely dark.")]
+    
     [SerializeField, Range(0f, 1f)] private float nightLightMultiplier = 0.15f;
 
-    [Header("Particle systems (turn Play On Awake OFF)")]
+    [Header("Particle systems)")]
     [SerializeField] private ParticleSystem rain;
     [SerializeField] private ParticleSystem snow;
     [SerializeField] private ParticleSystem clouds;
@@ -27,13 +27,12 @@ public class WeatherControllerBehaviour : MonoBehaviour
     [SerializeField] private Color cloudDayColor = new Color(1f, 1f, 1f, 0.3f);
     [SerializeField] private Color cloudNightColor = new Color(0.25f, 0.28f, 0.4f, 0.3f);
 
-    [Header("Optional")]
-    [SerializeField] private TMP_Text statusText;
 
-    private Material _sceneSky;            // the sky your scene had before Play
-    private float _sceneLightIntensity = 1f; // the light intensity your scene had before Play
 
-    // If Clear Day is empty, the sky your scene already had is the default.
+    private Material _sceneSky;            
+    private float _sceneLightIntensity = 1f; 
+
+    
     private Material DefaultSky => clearDaySky != null ? clearDaySky : _sceneSky;
 
     private void Awake()
@@ -51,7 +50,7 @@ public class WeatherControllerBehaviour : MonoBehaviour
         ResetToDefault();
     }
 
-    // Call this whenever new weather data arrives.
+  
     public void UpdateEnvironment(WeatherData data)
     {
         bool hasWeather = data != null && data.weather != null && data.weather.Length > 0;
@@ -64,7 +63,7 @@ public class WeatherControllerBehaviour : MonoBehaviour
         Apply(data.weather[0].id, CheckIsDay(data));
     }
 
-    // The default weather: clear day. Used at start, after an error, or when there is no data.
+   
     public void ResetToDefault()
     {
         Apply(0, true);
@@ -116,12 +115,6 @@ public class WeatherControllerBehaviour : MonoBehaviour
             sun.intensity = _sceneLightIntensity * (isDay ? 1f : nightLightMultiplier);
         }
 
-        
-        if (statusText != null)
-        {
-            string kind = isRain ? "Rain" : isSnow ? "Snow" : isMist ? "Mist" : isCloudy ? "Cloudy" : code == 800 ? "Clear" : "Default";
-            statusText.text = (isDay ? "Day" : "Night") + " | " + kind;
-        }
     }
 
     private void SetParticles(ParticleSystem system, bool on)
