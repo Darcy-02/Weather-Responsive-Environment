@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine.Networking;
 
-// Plain result of an HTTP call, so nothing else needs to know about UnityWebRequest.
+
 public class WebResponse
 {
     public bool IsSuccess;
@@ -11,7 +11,6 @@ public class WebResponse
     public string Error;
 }
 
-// How HTTP GET requests are sent. Swap for a fake in tests or a different HTTP library later.
 public interface IWebRequestSender
 {
     IEnumerator Get(string url, Action<WebResponse> onComplete);
