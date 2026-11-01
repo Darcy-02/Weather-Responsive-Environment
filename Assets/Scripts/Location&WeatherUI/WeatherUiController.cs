@@ -19,7 +19,9 @@ public class WeatherUiController : MonoBehaviour
     [Header("Predefined locations")]
     [SerializeField] private TMP_Dropdown locationDropdown;
 
-    
+    [SerializeField] private WeatherControllerBehaviour environment;
+
+
     [SerializeField]
     private List<LocationPreset> presets = new List<LocationPreset>
     {
@@ -145,12 +147,15 @@ public class WeatherUiController : MonoBehaviour
             {
                 if (requestId != _requestId) return;
 
+                environment.UpdateEnvironment(data);
+
                 string title = fixedTitle ?? BuildCustomTitle(data, latitude, longitude);
                 weatherView.ShowWeather(data, title);
             },
             onFailure: error =>
             {
                 if (requestId != _requestId) return;
+                environment.ResetToDefault();
 
                 weatherView.ShowRequestError(error);
             });
