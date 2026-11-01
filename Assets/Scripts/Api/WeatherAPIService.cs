@@ -9,7 +9,7 @@ public class WeatherAPIService : MonoBehaviour, IWeatherService
     private IWeatherUrlBuilder _urlBuilder;
     private IWeatherResponseParser _responseParser;
 
-    private const string BACKEND_URL = "http://127.0.0.1:5000/weather";
+    private const string BACKEND_URL = "https://weather-responsive-environmentb.onrender.com";
 
 
 
@@ -44,7 +44,7 @@ public class WeatherAPIService : MonoBehaviour, IWeatherService
             return;
         }
 
-        string url = $"{BACKEND_URL}?lat={latitude}&lon={longitude}";
+        string url = $"{BACKEND_URL}/weather?lat={latitude}&lon={longitude}";
 
         StartCoroutine(
             _requestSender.Get(
